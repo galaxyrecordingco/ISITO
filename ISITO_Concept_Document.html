@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISITO — International Space Infrastructure Treaty Organization</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #04070f;
+    --deep: #080f1e;
+    --hull: #0d1929;
+    --panel: #111e30;
+    --rim: #162436;
+    --steel: #1e3248;
+    --mist: #8aa4bc;
+    --ice: #b8cfe0;
+    --white: #e8f0f8;
+    --amber: #f5a623;
+    --amber-dim: #a86f0f;
+    --cyan: #00d4ff;
+    --cyan-dim: #006880;
+    --green: #00e5a0;
+    --green-dim: #006644;
+    --red: #ff4060;
+    --gold: #c9a84c;
+    --accent: #0ff;
+    --glow-cyan: 0 0 8px #00d4ff66, 0 0 24px #00d4ff22;
+    --glow-amber: 0 0 8px #f5a62366, 0 0 24px #f5a62322;
+    --glow-green: 0 0 8px #00e5a066, 0 0 24px #00e5a022;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* STARS BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 8%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 35%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 12%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 78% 88%, rgba(200,220,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 95%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 15%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SCAN LINE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(4,7,15,0.92);
+    border-bottom: 1px solid var(--steel);
+    backdrop-filter: blur(12px);
+    padding: 0 3rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .nav-logo span { color: var(--amber); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--mist);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--cyan); }
+
+  .nav-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: var(--glow-green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-ring {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.08);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ringRotate 80s linear infinite;
+  }
+
+  .hero-ring::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: 50%;
+    width: 4px; height: 4px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: var(--glow-cyan);
+    transform: translateX(-50%);
+  }
+
+  .hero-ring-2 {
+    width: 500px; height: 500px;
+    border-color: rgba(245,166,35,0.06);
+    animation: ringRotate 50s linear infinite reverse;
+  }
+
+  .hero-ring-3 {
+    width: 300px; height: 300px;
+    border-color: rgba(0,229,160,0.08);
+    animation: ringRotate 30s linear infinite;
+  }
+
+  @keyframes ringRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .hero-title .accent { color: var(--cyan); text-shadow: var(--glow-cyan); }
+
+  .hero-subtitle {
+    font-family: 'Orbitron', monospace;
+    font-weight: 400;
+    font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+    letter-spacing: 0.25em;
+    color: var(--mist);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .mission-statement {
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--ice);
+    line-height: 1.8;
+    max-width: 750px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    border-left: 2px solid var(--amber);
+    border-right: 2px solid var(--amber);
+    background: rgba(245,166,35,0.04);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .hero-metrics {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+
+  .metric {
+    text-align: center;
+  }
+
+  .metric-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    display: block;
+  }
+
+  .metric-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--mist);
+    text-transform: uppercase;
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION STRUCTURE */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-full {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--steel), var(--cyan-dim), var(--steel), transparent);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .section-number {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .section-title .hi { color: var(--cyan); }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--steel), transparent);
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--steel);
+    border-top: 2px solid var(--cyan-dim);
+    padding: 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .card:hover {
+    border-top-color: var(--cyan);
+    transform: translateY(-3px);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    border-bottom: 1px solid var(--steel);
+    border-left: 1px solid var(--steel);
+    background: var(--hull);
+  }
+
+  .card-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .card h3 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    color: var(--mist);
+    line-height: 1.7;
+  }
+
+  .card-amber { border-top-color: var(--amber-dim); }
+  .card-amber:hover { border-top-color: var(--amber); }
+  .card-amber .card-tag { color: var(--amber); }
+
+  .card-green { border-top-color: var(--green-dim); }
+  .card-green:hover { border-top-color: var(--green); }
+  .card-green .card-tag { color: var(--green); }
+
+  /* PHASE TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+    margin-top: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--cyan), var(--amber), var(--green));
+  }
+
+  .phase {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 1rem;
+  }
+
+  .phase::before {
+    content: '';
+    position: absolute;
+    left: -3.3rem; top: 0.4rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: var(--glow-cyan);
+    border: 2px solid var(--deep);
+  }
+
+  .phase-2::before { background: var(--amber); box-shadow: var(--glow-amber); }
+  .phase-3::before { background: var(--green); box-shadow: var(--glow-green); }
+
+  .phase-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  .phase-2 .phase-label { color: var(--amber); }
+  .phase-3 .phase-label { color: var(--green); }
+
+  .phase h3 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+
+  .phase p { font-size: 0.88rem; color: var(--mist); margin-bottom: 0.75rem; }
+
+  .phase-items {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .phase-items li {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.75rem;
+    background: var(--hull);
+    border-left: 2px solid var(--cyan-dim);
+  }
+
+  .phase-2 .phase-items li { border-left-color: var(--amber-dim); }
+  .phase-3 .phase-items li { border-left-color: var(--green-dim); }
+
+  /* SPECS TABLE */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .spec-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--steel);
+    background: var(--hull);
+  }
+
+  .spec-table td {
+    padding: 0.75rem 1rem;
+    color: var(--mist);
+    border-bottom: 1px solid rgba(30,50,72,0.5);
+  }
+
+  .spec-table tr:hover td { background: rgba(0,212,255,0.03); color: var(--ice); }
+
+  .spec-table td:first-child {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .spec-table td.val-cyan { color: var(--cyan); font-family: 'Share Tech Mono', monospace; }
+  .spec-table td.val-amber { color: var(--amber); font-family: 'Share Tech Mono', monospace; }
+  .spec-table td.val-green { color: var(--green); font-family: 'Share Tech Mono', monospace; }
+
+  /* MODULES DISPLAY */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .module {
+    background: var(--panel);
+    border: 1px solid var(--steel);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .module-header {
+    padding: 1rem 1.5rem;
+    background: var(--hull);
+    border-bottom: 1px solid var(--steel);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .module-id {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+  }
+
+  .module-mass {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+  }
+
+  .module-body { padding: 1.5rem; }
+
+  .module-body h3 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+
+  .module-body p { font-size: 0.82rem; color: var(--mist); margin-bottom: 1rem; }
+
+  .module-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .spec-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    background: var(--hull);
+    border: 1px solid var(--steel);
+    color: var(--mist);
+    letter-spacing: 0.08em;
+  }
+
+  .spec-tag.cyan { border-color: var(--cyan-dim); color: var(--cyan); }
+  .spec-tag.amber { border-color: var(--amber-dim); color: var(--amber); }
+  .spec-tag.green { border-color: var(--green-dim); color: var(--green); }
+
+  /* POWER CHART */
+  .power-bar-group { margin-top: 2rem; }
+
+  .power-bar {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .power-bar-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--mist);
+    letter-spacing: 0.08em;
+    text-align: right;
+  }
+
+  .power-bar-track {
+    height: 8px;
+    background: var(--hull);
+    border: 1px solid var(--steel);
+    overflow: hidden;
+  }
+
+  .power-bar-fill {
+    height: 100%;
+    transition: width 1s ease;
+  }
+
+  .power-bar-fill.cyan { background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); box-shadow: var(--glow-cyan); }
+  .power-bar-fill.amber { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); box-shadow: var(--glow-amber); }
+  .power-bar-fill.green { background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: var(--glow-green); }
+
+  .power-bar-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    width: 60px;
+    text-align: right;
+  }
+
+  /* GOVERNANCE */
+  .org-chart {
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  .org-node {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--panel);
+    border: 1px solid var(--steel);
+    border-top: 2px solid var(--cyan);
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--white);
+    letter-spacing: 0.08em;
+    margin: 0.5rem;
+  }
+
+  .org-node.authority { border-top-color: var(--amber); }
+  .org-node.member { border-top-color: var(--green); font-size: 0.7rem; }
+
+  .org-connector {
+    width: 1px;
+    height: 2rem;
+    background: var(--steel);
+    margin: 0 auto;
+  }
+
+  .org-row { display: flex; justify-content: center; flex-wrap: wrap; }
+
+  /* REVENUE */
+  .revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .revenue-item {
+    padding: 1.5rem;
+    background: var(--panel);
+    border: 1px solid var(--steel);
+    border-bottom: 2px solid var(--green-dim);
+  }
+
+  .revenue-item:hover { border-bottom-color: var(--green); }
+
+  .revenue-phase {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+
+  .revenue-item h4 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .revenue-item p { font-size: 0.8rem; color: var(--mist); }
+
+  /* RISK REGISTER */
+  .risk-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+  }
+
+  .risk-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--steel);
+    background: var(--hull);
+  }
+
+  .risk-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(30,50,72,0.5);
+    font-size: 0.82rem;
+    color: var(--mist);
+    vertical-align: top;
+  }
+
+  .risk-table td:first-child { color: var(--white); font-weight: 500; }
+
+  .risk-high { color: var(--red) !important; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem !important; }
+  .risk-med { color: var(--amber) !important; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem !important; }
+  .risk-low { color: var(--green) !important; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem !important; }
+
+  /* NAMING CAMPAIGN */
+  .campaign-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+    counter-reset: step;
+  }
+
+  .campaign-step {
+    padding: 1.5rem;
+    background: var(--panel);
+    border: 1px solid var(--steel);
+    position: relative;
+    counter-increment: step;
+  }
+
+  .campaign-step::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 2.5rem;
+    color: rgba(0,212,255,0.08);
+    position: absolute;
+    top: 0.5rem; right: 1rem;
+    line-height: 1;
+  }
+
+  .campaign-step h4 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .campaign-step p { font-size: 0.8rem; color: var(--mist); }
+
+  /* COVENANT BLOCK */
+  .covenant {
+    background: var(--hull);
+    border: 1px solid var(--steel);
+    border-left: 3px solid var(--amber);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--ice);
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+  }
+
+  .covenant-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  /* CRV SEQUENCE */
+  .crv-steps {
+    margin-top: 2rem;
+    counter-reset: crv;
+  }
+
+  .crv-step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    align-items: start;
+    counter-increment: crv;
+  }
+
+  .crv-num {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: rgba(0,212,255,0.15);
+    text-align: right;
+    padding-top: 0.1rem;
+    line-height: 1;
+  }
+
+  .crv-content {
+    border-left: 1px solid var(--steel);
+    padding-left: 1.5rem;
+  }
+
+  .crv-content h4 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.25rem;
+  }
+
+  .crv-content p { font-size: 0.85rem; color: var(--mist); }
+
+  /* DESIGN LANGUAGE SECTION */
+  .design-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .design-zone {
+    padding: 2rem;
+    background: var(--panel);
+    border: 1px solid var(--steel);
+  }
+
+  .design-zone-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--steel);
+  }
+
+  .design-zone-title.warm { color: var(--amber); }
+  .design-zone-title.cold { color: var(--cyan); }
+
+  .design-item {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .design-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    margin-top: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  .design-dot.amber { background: var(--amber); }
+  .design-dot.cyan { background: var(--cyan); }
+
+  .design-item p { font-size: 0.83rem; color: var(--mist); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 2;
+    background: var(--deep);
+    border-top: 1px solid var(--steel);
+    padding: 3rem;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--mist);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .footer-note {
+    font-size: 0.78rem;
+    color: rgba(138,164,188,0.5);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .classification {
+    margin-top: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(0,212,255,0.3);
+    text-transform: uppercase;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(0,212,255,0.04);
+    border: 1px solid var(--cyan-dim);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+  }
+
+  .callout-amber {
+    background: rgba(245,166,35,0.04);
+    border-color: var(--amber-dim);
+  }
+
+  .callout p { font-size: 0.88rem; color: var(--ice); line-height: 1.7; }
+  .callout strong { color: var(--cyan); font-weight: 600; }
+  .callout-amber strong { color: var(--amber); }
+
+  /* UTILITY */
+  .text-cyan { color: var(--cyan); }
+  .text-amber { color: var(--amber); }
+  .text-green { color: var(--green); }
+  .mono { font-family: 'Share Tech Mono', monospace; font-size: 0.85em; letter-spacing: 0.05em; }
+  .mt2 { margin-top: 2rem; }
+  p + p { margin-top: 0.75rem; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .design-grid { grid-template-columns: 1fr; }
+    .power-bar { grid-template-columns: 1fr; }
+    .power-bar-label { text-align: left; }
+    section { padding: 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">IS<span>I</span>TO</div>
+  <ul class="nav-links">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#power">Power</a></li>
+    <li><a href="#governance">Governance</a></li>
+    <li><a href="#revenue">Revenue</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#risks">Risks</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    CONCEPT DOC v0.4 — PHASE 1
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-ring"></div>
+  <div class="hero-ring hero-ring-2"></div>
+  <div class="hero-ring hero-ring-3"></div>
+  <div class="hero-content">
+    <div class="hero-tag">// International Space Infrastructure Treaty Organization //</div>
+    <div class="hero-title">IS<span class="accent">I</span>TO</div>
+    <div class="hero-subtitle">The Solaris Accord Station &nbsp;·&nbsp; Concept Document Rev. 0.4</div>
+    <div class="mission-statement">
+      "ISITO is the first permanent home of integrated human industry in orbit — a living port, a global communications nexus, and the foundation of a shipyard that will build humanity's future beyond Earth, owned not by one nation, but by all who dare to reach for the stars."
+    </div>
+    <div class="hero-metrics">
+      <div class="metric">
+        <span class="metric-value">~238 MT</span>
+        <span class="metric-label">Phase 1 Mass</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">12</span>
+        <span class="metric-label">Crew Capacity</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">250 kWe</span>
+        <span class="metric-label">Initial Power</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">5–8 yr</span>
+        <span class="metric-label">Phase 1 Timeline</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">~$3–5B</span>
+        <span class="metric-label">Phase 1 Est. Cost</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<section id="mission">
+  <div class="section-header">
+    <div class="section-number">// 01</div>
+    <h2 class="section-title">Executive <span class="hi">Summary</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>ISITO is a permanently crewed orbital infrastructure platform designed to grow with humanity's ambitions over multiple generations. It is not a destination — it is a foundation. Phase 1 establishes a crewed habitat, deep-space communications hub, and orbital servicing depot in Low Earth Orbit. Each subsequent phase expands capability, crew capacity, and industrial output as consortium membership and technology mature together.</p>
+
+  <p class="mt2">The project is structured from day one to generate operational revenue — not in some distant future when the shipyard is complete, but immediately, through communications leasing, orbital repair services, and research contracts. This is a self-sustaining industrial platform, not a science experiment.</p>
+
+  <div class="card-grid" style="margin-top:2.5rem">
+    <div class="card">
+      <div class="card-tag">// Primary Mission</div>
+      <h3>Communications Nexus</h3>
+      <p>Deep-space relay, Earth-to-orbit coordination, AI-assisted traffic management. Fills real gaps in current DSN coverage. Generates revenue from day one of operations with existing customers.</p>
+    </div>
+    <div class="card card-amber">
+      <div class="card-tag">// Secondary Mission</div>
+      <h3>Permanent Human Habitat</h3>
+      <p>12-person rotating crew on 6–12 month tours. Artificial gravity ring at 0.3–0.5g. Full life support, medical bay, circadian lighting. A place humans can actually live and work.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-tag">// Tertiary Mission</div>
+      <h3>Repair, Refuel & Build</h3>
+      <p>Orbital servicing depot for current commercial vehicles. Crew Return Vehicle as first orbital shipbuilding program. The proving ground for humanity's first true space shipyard.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:2rem">
+    <p><strong>NASA CLD Alignment:</strong> NASA's Commercial Low Earth Orbit Destinations (CLD) program is actively awarding contracts to exactly this class of platform. Axiom Space received $140M. Starlab (Voyager/Nanoracks) is funded. ISITO's Phase 1 design is structurally eligible and should be positioned to compete for or formally partner with CLD funding before any private capital round.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 2: ORBITAL ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-header">
+    <div class="section-number">// 02</div>
+    <h2 class="section-title">Orbital <span class="hi">Architecture</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>Orbital location is not a preference — it is an engineering decision that drives every other subsystem. The phased migration strategy below ensures Phase 1 uses proven, accessible infrastructure while preserving the long-term deep-space mission geometry.</p>
+
+  <table class="spec-table" style="margin-top:2rem">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Location</th>
+        <th>Altitude / Regime</th>
+        <th>Rationale</th>
+        <th>Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Phase 1</td>
+        <td>Low Earth Orbit (LEO)</td>
+        <td class="val-cyan">500–600 km</td>
+        <td>Lowest cost to reach, Starship-accessible, ISS heritage directly applicable</td>
+        <td class="val-amber">MODERATE — debris, drag</td>
+      </tr>
+      <tr>
+        <td>Phase 2</td>
+        <td>Near Rectilinear Halo Orbit (NRHRO)</td>
+        <td class="val-cyan">Cis-lunar</td>
+        <td>Joins Gateway corridor, enables lunar ISRU, superior deep-space comms geometry</td>
+        <td class="val-amber">MODERATE — 3–4 day transit</td>
+      </tr>
+      <tr>
+        <td>Phase 3+</td>
+        <td>Earth-Moon L4/L5 Lagrange Point</td>
+        <td class="val-cyan">~384,000 km</td>
+        <td>Gravitationally stable, debris-free, optimal for permanent large-scale infrastructure</td>
+        <td class="val-green">LOW — long transit mitigated by Phase 3 transport</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:2.5rem">
+    <h3 style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--white);margin-bottom:1rem;letter-spacing:0.1em">ARTIFICIAL GRAVITY — ROTATION SPECIFICATIONS</h3>
+    <p style="font-size:0.85rem;color:var(--mist);margin-bottom:1.5rem">There is no naturally occurring "zero-g zone." Microgravity exists everywhere in freefall orbit. The habitat ring generates artificial gravity purely through centripetal acceleration. Phase 1 targets 0.3–0.5g — sufficient to prevent critical bone and muscle degradation, buildable at Phase 1 scale, and a proven concept in theoretical and simulation studies.</p>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Target Gravity</th>
+          <th>Rotation Rate</th>
+          <th>Required Radius</th>
+          <th>Phase</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0.3g (Lunar-like)</td>
+          <td class="val-cyan">3 RPM</td>
+          <td class="val-amber">~30 m</td>
+          <td class="val-green">Phase 1</td>
+          <td>Below nausea threshold, structurally achievable</td>
+        </tr>
+        <tr>
+          <td>0.5g (Mars-like)</td>
+          <td class="val-cyan">4 RPM</td>
+          <td class="val-amber">~28 m</td>
+          <td class="val-green">Phase 1 max</td>
+          <td>Preferred Phase 1 target</td>
+        </tr>
+        <tr>
+          <td>1.0g (Earth normal)</td>
+          <td class="val-cyan">2 RPM</td>
+          <td class="val-amber">~223 m</td>
+          <td>Phase 3+</td>
+          <td>Requires full torus structure — Phase 3 territory</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 3: MODULES -->
+<section id="modules">
+  <div class="section-header">
+    <div class="section-number">// 03</div>
+    <h2 class="section-title">Phase 1 <span class="hi">Modules</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <p>Phase 1 consists of six primary modules. All modules comply with the Station Interface Standard (SIS) and the International Docking Standard (IDSS). Contributing consortium members may design additional modules provided they pass independent SIS certification prior to launch.</p>
+
+  <div class="modules-grid">
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-01 // CORE SPINE</span>
+        <span class="module-mass">~60 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Core Spine & Multi-Port Docking Hub</h3>
+        <p>Structural backbone of the station. All other modules attach to the spine. Houses primary power distribution, data routing, and emergency systems backbone. Minimum 8 docking ports in Phase 1.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">Al-Li Alloy Truss</span>
+          <span class="spec-tag">8+ Docking Ports</span>
+          <span class="spec-tag">IDSS Standard</span>
+          <span class="spec-tag amber">~2–3 Starship Flights</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-02 // HAB RING</span>
+        <span class="module-mass">~35 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Rotating Habitat Ring</h3>
+        <p>60m tip-to-tip diameter. Connects to spine via rotary bearing joint. Generates 0.3–0.5g artificial gravity. Houses crew quarters, medical bay, galley, recreation space, and circadian lighting systems. Water-wall radiation shielding integrated into hull panels.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">0.3–0.5g @ 3–4 RPM</span>
+          <span class="spec-tag">12 Crew Capacity</span>
+          <span class="spec-tag amber">Water-Wall Shielding</span>
+          <span class="spec-tag">Circadian Lighting</span>
+          <span class="spec-tag green">Inflatable Sections Possible</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-03 // COMMS ARRAY</span>
+        <span class="module-mass">~8 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Deep Space Communications Array & AI Traffic Node</h3>
+        <p>Ka-band and X-band phased arrays plus optical laser communications. Fills critical gap in Deep Space Network coverage. AI-assisted orbital traffic coordination — nothing functionally equivalent currently exists. Primary revenue generator from operational day one.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">Ka + X-Band + Laser</span>
+          <span class="spec-tag">~1 Gbps Laser Comms</span>
+          <span class="spec-tag amber">AI Traffic Coordination</span>
+          <span class="spec-tag green">Day-1 Revenue</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-04 // SERVICE BAY</span>
+        <span class="module-mass">~40 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Repair, Refueling & Servicing Bay</h3>
+        <p>Open unpressurized truss structure. Two robotic manipulator arms (Canadarm2-heritage). LO₂/LCH₄ propellant depot for visiting vehicle refueling. EVA airlock access. Serves existing commercial operators immediately — every satellite operator is a potential paying client.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">2x Robotic Arms</span>
+          <span class="spec-tag">Propellant Depot</span>
+          <span class="spec-tag amber">EVA Airlock</span>
+          <span class="spec-tag">Unpressurized Truss</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-05 // R&D LAB</span>
+        <span class="module-mass">~25 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Research & Development Laboratory</h3>
+        <p>ISS National Lab model. Leased rack space to universities, pharmaceutical companies, materials science firms, and government agencies. Generates approximately $100–150M annually in research contracts based on ISS heritage. Does not require the investor to understand the shipyard vision.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">ISS NatLab Model</span>
+          <span class="spec-tag green">~$100–150M/yr Revenue</span>
+          <span class="spec-tag">Leasable Rack Space</span>
+          <span class="spec-tag amber">Multi-user</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-header">
+        <span class="module-id">MOD-06 // CRV BAY</span>
+        <span class="module-mass">~30 MT</span>
+      </div>
+      <div class="module-body">
+        <h3>Crew Return Vehicle Construction Bay</h3>
+        <p>The station's first shipbuilding program. Subassemblies manufactured on Earth, launched as cargo, assembled in orbit. First CRV serves as station emergency escape vehicle — guaranteed customer before a single part is built. Subsequent CRVs prove orbital manufacturing heritage and fund the next phase of shipbuilding capability.</p>
+        <div class="module-specs">
+          <span class="spec-tag cyan">Orbital Assembly</span>
+          <span class="spec-tag">Emergency Escape Vehicle</span>
+          <span class="spec-tag amber">4–6 Crew Capacity</span>
+          <span class="spec-tag green">Shipbuilding Proof-of-Concept</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <table class="spec-table" style="margin-top:2.5rem">
+    <thead>
+      <tr>
+        <th>Subsystem</th>
+        <th>Mass Estimate</th>
+        <th>Launch Flights (Starship)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>MOD-01 Core Spine & Docking</td><td class="val-amber">60 MT</td><td class="val-cyan">2–3</td></tr>
+      <tr><td>MOD-02 Rotating Habitat Ring</td><td class="val-amber">35 MT</td><td class="val-cyan">2</td></tr>
+      <tr><td>MOD-03 Communications Array</td><td class="val-amber">8 MT</td><td class="val-cyan">1</td></tr>
+      <tr><td>MOD-04 Repair & Servicing Bay</td><td class="val-amber">40 MT</td><td class="val-cyan">2</td></tr>
+      <tr><td>MOD-05 R&D Laboratory</td><td class="val-amber">25 MT</td><td class="val-cyan">1</td></tr>
+      <tr><td>MOD-06 CRV Construction Bay</td><td class="val-amber">30 MT</td><td class="val-cyan">1–2</td></tr>
+      <tr><td>Life Support & Power Systems</td><td class="val-amber">25 MT</td><td class="val-cyan">1</td></tr>
+      <tr><td>Radiation Shielding (Water Wall)</td><td class="val-amber">30 MT</td><td class="val-cyan">1–2</td></tr>
+      <tr><td>Margins + Consumables (20%)</td><td class="val-amber">40 MT</td><td class="val-cyan">2</td></tr>
+      <tr><td style="font-family:'Orbitron',monospace;font-weight:700;color:var(--white)">PHASE 1 TOTAL</td><td class="val-green" style="font-weight:700">~293 MT</td><td class="val-green" style="font-weight:700">~15–16 flights</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 4: POWER -->
+<section id="power">
+  <div class="section-header">
+    <div class="section-number">// 04</div>
+    <h2 class="section-title">Power <span class="hi">Architecture</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>A fusion reactor is not in scope for any phase within a credible engineering timeline. The commercially available fusion power that would be needed does not exist and is not funded for production within this century's first half. The power roadmap below uses proven and near-term technology at each phase, scaling to fission as NASA's Kilopower and Fission Surface Power programs mature.</p>
+
+  <div class="callout callout-amber" style="margin-top:1.5rem">
+    <p><strong>Why Not Fusion:</strong> ITER, the world's largest fusion experiment, will not produce net power output — it is a science instrument. Private fusion companies (Helion, Commonwealth Fusion) target demonstration in the late 2020s, but no compact space-deployable fusion power system exists, is funded, or has a credible production timeline within Phase 1 or 2. Fission is the correct bridge technology.</p>
+  </div>
+
+  <div class="power-bar-group">
+    <div class="power-bar">
+      <div class="power-bar-label">Solar Arrays (Phase 1)</div>
+      <div class="power-bar-track"><div class="power-bar-fill cyan" style="width:50%"></div></div>
+      <div class="power-bar-value">250 kWe</div>
+    </div>
+    <div class="power-bar">
+      <div class="power-bar-label">+ Kilopower Fission (Ph.1 end)</div>
+      <div class="power-bar-track"><div class="power-bar-fill amber" style="width:54%"></div></div>
+      <div class="power-bar-value">270 kWe</div>
+    </div>
+    <div class="power-bar">
+      <div class="power-bar-label">+ FSP Unit (Phase 2)</div>
+      <div class="power-bar-track"><div class="power-bar-fill amber" style="width:62%"></div></div>
+      <div class="power-bar-value">310 kWe</div>
+    </div>
+    <div class="power-bar">
+      <div class="power-bar-label">Full Fission Plant (Phase 3)</div>
+      <div class="power-bar-track"><div class="power-bar-fill green" style="width:100%"></div></div>
+      <div class="power-bar-value">500+ kWe</div>
+    </div>
+  </div>
+
+  <table class="spec-table" style="margin-top:2rem">
+    <thead>
+      <tr><th>System</th><th>Output</th><th>Mass</th><th>Status</th><th>Phase</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Solar Arrays</td><td class="val-cyan">250 kWe</td><td>~15–20 MT</td><td class="val-green">TRL 9 — Operational Now</td><td class="val-green">Phase 1</td></tr>
+      <tr><td>NASA Kilopower (×2 units)</td><td class="val-cyan">20 kWe</td><td>~800 kg</td><td class="val-amber">TRL 5–6 — Demo Complete</td><td class="val-amber">Phase 1 End (~Yr 7–8)</td></tr>
+      <tr><td>NASA Fission Surface Power</td><td class="val-cyan">40 kWe</td><td>~3–4 MT</td><td class="val-amber">TRL 4–5 — In Development</td><td>Phase 2</td></tr>
+      <tr><td>Expanded Fission Reactor</td><td class="val-cyan">100–500 kWe</td><td>~8–15 MT</td><td style="color:var(--mist)">TRL 3–4 — Research Phase</td><td>Phase 3</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--mist)">Critical advantage of fission supplementation: eclipse periods in LEO are approximately 35–40 minutes per 90-minute orbit. Solar alone cannot guarantee 24/7 power for critical life support and communications systems without very large battery banks. Even 2 Kilopower units provide eclipse-proof baseline power for life support and comms at minimal mass cost.</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 5: LIFE SUPPORT & RADIATION -->
+<section>
+  <div class="section-header">
+    <div class="section-number">// 05</div>
+    <h2 class="section-title">Life Support & <span class="hi">Radiation</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>Crew safety is the non-negotiable engineering constraint that sizes the habitat, shielding mass, and medical capability. The parameters below are hard limits — not preferences — and all habitat module designs must be validated against them before SIS certification.</p>
+
+  <table class="spec-table" style="margin-top:1.5rem">
+    <thead>
+      <tr><th>Parameter</th><th>Requirement</th><th>Basis</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Annual Radiation Dose Limit</td><td class="val-green">&lt; 100 mSv/year</td><td>NASA occupational limit 50 mSv/yr LEO; extended to 100 mSv for cis-lunar operations</td></tr>
+      <tr><td>Crew Rotation Period</td><td class="val-cyan">6–12 months</td><td>ISS model; shorter rotations possible for medical need</td></tr>
+      <tr><td>Atmospheric Pressure</td><td class="val-cyan">101.3 kPa ± 2%</td><td>Standard; deviations require SIS notification and approval</td></tr>
+      <tr><td>O₂ Partial Pressure</td><td class="val-cyan">20.9 kPa</td><td>ECLSS standard; fire risk above 30% O₂ concentration</td></tr>
+      <tr><td>Emergency O₂ Reserve</td><td class="val-amber">72 hours minimum</td><td>Evacuation and rescue window requirement</td></tr>
+      <tr><td>CO₂ Scrubbing</td><td class="val-cyan">CDRA-heritage system</td><td>ISS Carbon Dioxide Removal Assembly — proven 25+ years</td></tr>
+      <tr><td>Water Recovery</td><td class="val-green">&gt; 90% recycling rate</td><td>ISS USOS achieves ~93% — target match or exceed</td></tr>
+      <tr><td>Medical Bay</td><td class="val-amber">Trauma + telemedicine</td><td>Minimum 72-hour surgical stabilization capability</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:2rem">
+    <h3 style="font-family:'Orbitron',monospace;font-size:0.85rem;color:var(--white);margin-bottom:1rem;letter-spacing:0.1em">RADIATION SHIELDING STRATEGY</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">// Primary Shield</div>
+        <h3>Water Wall Panels</h3>
+        <p>Water is one of the best radiation shielding materials per unit mass and serves dual purpose as emergency drinking water reserve. Integrated into habitat ring hull panels. Target ~10 cm water equivalent. Mass cost: ~30 MT for Phase 1 habitat coverage.</p>
+      </div>
+      <div class="card card-amber">
+        <div class="card-tag">// Secondary Shield</div>
+        <h3>Polyethylene Composites</h3>
+        <p>High hydrogen content makes polyethylene highly effective against GCR (Galactic Cosmic Rays). Used in sleeping quarters and medical bay panels where crew spend most stationary time. Lighter than water equivalent per unit shielding at thickness constraints.</p>
+      </div>
+      <div class="card card-green">
+        <div class="card-tag">// Storm Shelter</div>
+        <h3>Solar Particle Event Bunker</h3>
+        <p>A dedicated heavily-shielded "storm shelter" module — approximately 20 m³ — where full crew can shelter during Solar Particle Events (SPEs). SPEs can deliver lethal doses in hours without shielding. Storm shelter must be reachable from any point on the station in under 5 minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 6: CRV PROGRAM -->
+<section>
+  <div class="section-header">
+    <div class="section-number">// 06</div>
+    <h2 class="section-title">Crew Return Vehicle — <span class="hi">First Build</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>The Crew Return Vehicle program is simultaneously ISITO's emergency escape system and its first orbital shipbuilding proof-of-concept. This sequencing is intentional — the station needs this vehicle on day one of crewed operations regardless of the shipbuilding mission. The first CRV has a guaranteed customer before a single subassembly is manufactured.</p>
+
+  <div class="callout" style="margin-top:1.5rem">
+    <p><strong>Why this is the right first build:</strong> You are not trying to build a starship in orbit. You are proving that orbital fabrication and assembly is possible using a vehicle small enough that its first failure is survivable data — not a program-ending catastrophe. Every CRV built generates on-orbit manufacturing heritage. Heritage justifies the next vehicle. That is how you build a shipyard program.</p>
+  </div>
+
+  <table class="spec-table" style="margin-top:1.5rem">
+    <thead><tr><th>Parameter</th><th>Specification</th><th>Heritage Reference</th></tr></thead>
+    <tbody>
+      <tr><td>Total Mass</td><td class="val-cyan">8–12 MT</td><td>Dragon Crew = 12.5 MT, Soyuz = 7.2 MT</td></tr>
+      <tr><td>Crew Capacity</td><td class="val-cyan">4–6 persons</td><td>Full Phase 1 crew emergency coverage</td></tr>
+      <tr><td>Orbital Docked Lifetime</td><td class="val-amber">180–365 days</td><td>Soyuz replacement model</td></tr>
+      <tr><td>Reentry System</td><td class="val-green">Ablative heat shield + drogue/main chutes</td><td>Proven — lowest first-build risk</td></tr>
+      <tr><td>Propulsion</td><td class="val-cyan">Hypergolic RCS only</td><td>No main engine needed for deorbit</td></tr>
+      <tr><td>Landing Mode</td><td class="val-green">Ocean splashdown (Phase 1)</td><td>Eliminates precision landing complexity</td></tr>
+      <tr><td>Construction Method</td><td class="val-amber">Modular bolted assembly — no vacuum welding</td><td>EVA-compatible, robotically assisted</td></tr>
+      <tr><td>First Vehicle Total Cost</td><td class="val-cyan">~$150–265M</td><td>Includes R&D, cert, and 3× budget lines</td></tr>
+    </tbody>
+  </table>
+
+  <div class="crv-steps">
+    <div class="crv-step">
+      <div class="crv-num">01</div>
+      <div class="crv-content">
+        <h4>Earth Manufacture of Subassemblies</h4>
+        <p>Pressure vessel sections, heat shield panels, avionics bay, parachute system, RCS thruster quads manufactured to SIS tolerances. No single assembly exceeds Starship cargo bay volume constraints.</p>
+      </div>
+    </div>
+    <div class="crv-step">
+      <div class="crv-num">02</div>
+      <div class="crv-content">
+        <h4>Launch as Cargo — Not as a Vehicle</h4>
+        <p>Subassemblies fly as cargo on multiple Starship flights. This is the core of the proof-of-concept — you are building a spacecraft from parts that were never assembled on Earth.</p>
+      </div>
+    </div>
+    <div class="crv-step">
+      <div class="crv-num">03</div>
+      <div class="crv-content">
+        <h4>On-Orbit Assembly at MOD-06 Bay</h4>
+        <p>Station robotic arms and EVA crew assemble sections in the CRV Construction Bay. Pressure testing, leak checks, systems integration conducted in orbit.</p>
+      </div>
+    </div>
+    <div class="crv-step">
+      <div class="crv-num">04</div>
+      <div class="crv-content">
+        <h4>CRV Docks as Emergency Vehicle</h4>
+        <p>Certified CRV docks to station and serves as primary crew emergency return capability. This is the station's most critical safety asset.</p>
+      </div>
+    </div>
+    <div class="crv-step">
+      <div class="crv-num">05</div>
+      <div class="crv-content">
+        <h4>Operational Reentry After 180 Days</h4>
+        <p>CRV undocks, performs autonomous deorbit burn, ocean splashdown. Recovery data — thermal performance, structural behavior, systems reliability — feeds directly into CRV #2 design.</p>
+      </div>
+    </div>
+    <div class="crv-step">
+      <div class="crv-num">06</div>
+      <div class="crv-content">
+        <h4>Iterate — This Is Your Shipbuilding Program</h4>
+        <p>CRV #2 incorporates lessons learned. CRV #3 adds improvements. By CRV #4 you have genuine orbital manufacturing heritage. That heritage is the engineering foundation for the Orbital Transfer Vehicle program and eventually the full shipyard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 7: GOVERNANCE -->
+<section id="governance">
+  <div class="section-header">
+    <div class="section-number">// 07</div>
+    <h2 class="section-title">Governance & <span class="hi">Legal Framework</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>ISITO operates under Model B consortium equity governance — proportional equity stakes tied to investment value, with non-negotiable SpaceX/NASA technical authority at the SIS level. The closest real-world analog is CERN, where member nations hold proportional stakes but the Director-General and Scientific Council retain final authority over safety and operational decisions regardless of member preferences.</p>
+
+  <div class="org-chart">
+    <div class="org-node" style="border-top-color:var(--cyan)">ISITO ASSEMBLY<br><span style="font-size:0.6rem;color:var(--mist);font-family:'Share Tech Mono',monospace;letter-spacing:0.1em">All Equity Holders — Advisory & Governance Vote</span></div>
+    <div class="org-connector"></div>
+    <div class="org-row">
+      <div class="org-node authority">SIS TECHNICAL BOARD<br><span style="font-size:0.6rem;color:var(--mist);font-family:'Share Tech Mono',monospace">SpaceX + NASA — Final Engineering Authority</span></div>
+      <div class="org-node authority">OPERATIONS COUNCIL<br><span style="font-size:0.6rem;color:var(--mist);font-family:'Share Tech Mono',monospace">Elected Consortium Members</span></div>
+    </div>
+    <div class="org-connector"></div>
+    <div class="org-row">
+      <div class="org-node member">NASA CLD Partners</div>
+      <div class="org-node member">Commercial Space Cos.</div>
+      <div class="org-node member">International Agencies</div>
+      <div class="org-node member">Research Institutions</div>
+      <div class="org-node member">Entertainment / Media</div>
+    </div>
+  </div>
+
+  <div class="covenant" style="margin-top:2.5rem">
+    <div class="covenant-title">// Anti-Exclusion Covenant — SIS Charter Article [TBD]</div>
+    "No equity holder, consortium member, or module operator may restrict access to, adjacency of, or operational cooperation with any other certified ISITO consortium member on the basis of national origin, political affiliation, corporate interest, or competitive relationship, provided all parties are in compliance with Station Interface Standard requirements and the ISITO founding charter. Violations of this covenant constitute grounds for equity suspension by the SIS Technical Board without consortium vote."
+  </div>
+
+  <div class="card-grid" style="margin-top:2rem">
+    <div class="card">
+      <div class="card-tag">// Equity Model</div>
+      <h3>Model B — Proportional Consortium Equity</h3>
+      <p>Investment value determines equity percentage. Equity holders vote on governance decisions proportionally. Revenue distributed as dividends after operational costs. SpaceX/NASA hold founding equity plus permanent SIS authority regardless of future dilution.</p>
+    </div>
+    <div class="card card-amber">
+      <div class="card-tag">// Legal Note</div>
+      <h3>Securities Registration Required</h3>
+      <p>Model B equity issuance constitutes a security under US law (SEC jurisdiction) and international equivalents. Legal entity must be formally constituted before accepting investment. Securities attorney required before first term sheet. This is Phase 0 work — not optional.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-tag">// Station Name</div>
+      <h3>Global Public Naming Campaign</h3>
+      <p>The station's common name is determined by global public vote — not by any single company, nation, or investor. The formal treaty body name is ISITO. The station designation is determined by humanity. See Section 11 for campaign design.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:2rem">
+    <p><strong>SIS — Station Interface Standard:</strong> Every module contributed by any consortium member must comply with SIS before certification. SIS governs structural docking geometry and load ratings (IDSS foundation), power voltage and connector standards, atmospheric pressure and gas composition specs, data network protocol and bandwidth allocation, thermal rejection handoff requirements, and emergency bulkhead isolation capability. Non-compliance voids module certification. The SIS Technical Board (SpaceX + NASA) has unilateral authority to reject or de-certify any module. This is non-negotiable.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 8: REVENUE -->
+<section id="revenue">
+  <div class="section-header">
+    <div class="section-number">// 08</div>
+    <h2 class="section-title">Revenue <span class="hi">Model</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>ISITO must generate operational revenue before the shipyard program produces a single vessel. The following revenue streams are active in Phase 1 — not contingent on Phase 3 shipyard completion. This is a critical investor credibility point.</p>
+
+  <div class="revenue-grid">
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1 — Day 1</div>
+      <h4>NASA CLD Program Contract</h4>
+      <p>NASA is actively awarding Commercial Low Earth Orbit Destinations contracts. ISITO Phase 1 is structurally eligible. Axiom received $140M. Target: $200–500M CLD contract as Phase 1 anchor funding.</p>
+    </div>
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1 — Operational</div>
+      <h4>Deep Space Comms Leasing</h4>
+      <p>Bandwidth leasing to lunar and Mars mission operators, NASA, ESA, and commercial deep-space companies. No equivalent service currently exists in orbit. Near-monopoly position in Phase 1.</p>
+    </div>
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1 — Operational</div>
+      <h4>Orbital Repair & Refueling</h4>
+      <p>Every commercial satellite operator and launch provider is a potential paying client. Propellant depot services for visiting vehicles. Robotic repair of commercial satellites.</p>
+    </div>
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1 — Operational</div>
+      <h4>R&D Module Lease</h4>
+      <p>ISS National Lab generates ~$150M/year. Rack space leased to pharma, materials science, universities, government agencies. Revenue independent of space industry familiarity.</p>
+    </div>
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1 — Consortium</div>
+      <h4>Module Slot Licensing</h4>
+      <p>Companies pay for the right to design and attach a SIS-certified module. Module operational rights revert to consortium after defined period (Model A mechanics applied per module within Model B structure).</p>
+    </div>
+    <div class="revenue-item">
+      <div class="revenue-phase">// Phase 1–2</div>
+      <h4>CRV Construction Contracts</h4>
+      <p>CRV program funded partly by NASA emergency vehicle contract, partly by sovereign space agencies needing crew return capability. Every CRV built funds the next iteration and the shipbuilding program.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-amber" style="margin-top:2rem">
+    <p><strong>What the Comms Hub Cannot Claim:</strong> ISITO's communications node cannot replace global satellite constellations like Starlink, OneWeb, or Kuiper. One orbital station has one ground footprint at a time — global coverage requires a constellation. ISITO's comms value is in <strong>deep-space relay, inter-vessel coordination, and emergency backbone</strong> — gaps that constellations do not fill. This distinction must be precise in all investor materials.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 9: DESIGN LANGUAGE -->
+<section>
+  <div class="section-header">
+    <div class="section-number">// 09</div>
+    <h2 class="section-title">Design <span class="hi">Language</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>The aesthetic direction for ISITO synthesizes two visual vocabularies: the clean, inhabited warmth of The Orville's Union-class architecture and the honest industrial cyberpunk of deep-space working environments. This is not purely cosmetic — the distinction between habitat zones and working zones maps directly to human factors engineering principles for long-duration crew performance and mental health.</p>
+
+  <div class="design-grid">
+    <div class="design-zone">
+      <div class="design-zone-title warm">HABITAT ZONES — The Orville Influence</div>
+      <div class="design-item">
+        <div class="design-dot amber"></div>
+        <p>Curved composite hull panels in matte warm-white and brushed metal. No sharp corners in living areas.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot amber"></div>
+        <p>Circadian-cycling warm lighting (2700–3000K ambient). Crew health requirement doubles as aesthetic choice.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot amber"></div>
+        <p>Generous viewport integration. Natural orbital light treated as a primary design element, not an afterthought.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot amber"></div>
+        <p>Visual hierarchy by function — crew can read a space's purpose immediately without signage.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot amber"></div>
+        <p>Lived-in quality. Not clinical. Evidence of habitation. Plants if bioreactor life support permits.</p>
+      </div>
+    </div>
+    <div class="design-zone">
+      <div class="design-zone-title cold">WORKING ZONES — Cyberpunk Industrial</div>
+      <div class="design-item">
+        <div class="design-dot cyan"></div>
+        <p>Exposed structural truss members and organized utility conduit runs. Honest about what the station is made of.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot cyan"></div>
+        <p>High-contrast task lighting against darker ambient. Status indicator arrays visible at a glance.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot cyan"></div>
+        <p>Layered, additive construction aesthetic. Each new module visibly added to the existing structure.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot cyan"></div>
+        <p>Grip-textured modular floor panels. Replaceable units — maintenance access is part of the design.</p>
+      </div>
+      <div class="design-item">
+        <div class="design-dot cyan"></div>
+        <p>Multilingual functional signage and digital status boards as visual elements, not intrusions.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:2rem">
+    <p><strong>This distinction is not arbitrary:</strong> Long-duration crew performance research consistently shows that environments which clearly delineate rest space from work space reduce psychological fatigue and improve decision-making quality over 6–12 month tours. The aesthetic choice is simultaneously a human factors engineering requirement. Every design decision in the habitat ring should be defensible on both grounds.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 10: ROADMAP -->
+<section id="roadmap">
+  <div class="section-header">
+    <div class="section-number">// 10</div>
+    <h2 class="section-title">Mission <span class="hi">Roadmap</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="phase">
+      <div class="phase-label">// Phase 0 — Years 1–2</div>
+      <h3>Foundation & Legal Formation</h3>
+      <p>Before a single module is manufactured, the legal and institutional infrastructure must exist. This phase is as critical as any engineering work — investors cannot put money into a structure that doesn't legally exist.</p>
+      <ul class="phase-items">
+        <li>ISITO legal entity formation</li>
+        <li>Securities registration (SEC + international)</li>
+        <li>SpaceX / NASA founding agreement</li>
+        <li>SIS v1.0 documentation</li>
+        <li>NASA CLD application / partnership</li>
+        <li>Initial consortium recruitment</li>
+        <li>Public naming campaign launch</li>
+        <li>Phase 1 detailed design contracts</li>
+      </ul>
+    </div>
+
+    <div class="phase phase-2">
+      <div class="phase-label">// Phase 1 — Years 2–8 — LEO 500–600 km</div>
+      <h3>First Station — Crewed Hub, Comms, Repair</h3>
+      <p>Build, launch, and crew the first operational ISITO station. Begin CRV program. Establish revenue streams. Prove the concept. At Phase 1 completion, ISITO is a self-sustaining operational platform generating income and demonstrating orbital manufacturing capability.</p>
+      <ul class="phase-items">
+        <li>Core Spine launch & assembly</li>
+        <li>Rotating Habitat Ring deployment</li>
+        <li>Communications Array operational</li>
+        <li>First crew rotation (6 persons)</li>
+        <li>Repair bay open for business</li>
+        <li>R&D lab leases active</li>
+        <li>CRV #1 assembled & docked</li>
+        <li>CRV #1 reentry & data recovery</li>
+        <li>CRV #2 construction begins</li>
+        <li>Kilopower fission units added</li>
+        <li>Crew capacity expanded to 12</li>
+        <li>First international modules added</li>
+      </ul>
+    </div>
+
+    <div class="phase phase-3">
+      <div class="phase-label">// Phase 2 — Years 8–18 — Transition to Cis-Lunar NRHRO</div>
+      <h3>Cis-Lunar Expansion — Lunar Resources, OTV Program</h3>
+      <p>Migrate primary operations to Near Rectilinear Halo Orbit. Integrate lunar ISRU material supply. Begin Orbital Transfer Vehicle construction program using CRV manufacturing heritage. Full international consortium membership open.</p>
+      <ul class="phase-items">
+        <li>NRHRO transition operations</li>
+        <li>Lunar ISRU material supply chain</li>
+        <li>Fission Surface Power unit</li>
+        <li>OTV Phase 1 construction</li>
+        <li>Dream Chaser class crew transport</li>
+        <li>Full international module contributions</li>
+        <li>Expanded rotating habitat (Phase 2 ring)</li>
+        <li>Advanced robotics upgrade</li>
+      </ul>
+    </div>
+
+    <div class="phase phase-3">
+      <div class="phase-label">// Phase 3+ — Years 18–35+ — L4/L5 Full Shipyard</div>
+      <h3>Permanent Industrial Platform — Full Shipyard Operations</h3>
+      <p>Transition to gravitationally stable L4/L5 Lagrange point. Full rotating torus at 1g. SABRE-based spaceplane transport from Earth. Interplanetary vessel construction. ISITO becomes the foundation of humanity's permanent industrial presence beyond Earth.</p>
+      <ul class="phase-items">
+        <li>L4/L5 permanent station deployment</li>
+        <li>Full 1g rotating torus</li>
+        <li>SABRE spaceplane transport</li>
+        <li>Interplanetary vessel construction</li>
+        <li>500+ kWe fission power plant</li>
+        <li>Full Solaris Accord membership</li>
+        <li>Permanent multi-generational crew</li>
+        <li>First vessels launched from ISITO</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 11: NAMING CAMPAIGN -->
+<section>
+  <div class="section-header">
+    <div class="section-number">// 11</div>
+    <h2 class="section-title">Global Naming <span class="hi">Campaign</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p>The station's common name is determined by a global public vote. This is not a marketing exercise — it is a deliberate act of shared ownership. Every person who participates feels personal stake in the mission. That is not sentiment. That is a legitimacy engine no amount of marketing spend can replicate. The formal organization name is ISITO. The treaty framework is The Solaris Accord. The station itself belongs to the world.</p>
+
+  <div class="campaign-steps">
+    <div class="campaign-step">
+      <h4>Public Concept Release</h4>
+      <p>Release rendered concept imagery, mission brief, and engineering summary publicly. Build emotional connection before asking for input. Target: global press coverage.</p>
+    </div>
+    <div class="campaign-step">
+      <h4>Nomination Phase</h4>
+      <p>6-week open global name submission in 12+ languages. No restrictions on creativity. Target: millions of submissions, massive press cycle #1.</p>
+    </div>
+    <div class="campaign-step">
+      <h4>Shortlist Curation</h4>
+      <p>ISITO linguistic panel narrows to 5–7 finalists. Requirements: translatable without negative connotations in major world languages, technically appropriate, not trademarked.</p>
+    </div>
+    <div class="campaign-step">
+      <h4>Global Public Vote</h4>
+      <p>4-week vote in all major languages. Open globally with no eligibility restrictions. One vote per verified identity. Press cycle #2.</p>
+    </div>
+    <div class="campaign-step">
+      <h4>Naming Ceremony</h4>
+      <p>Globally broadcast announcement event. The moment ISITO becomes real to the world. Press cycle #3 — this is your public launch. The station has a name before it has a module.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 12: RISK REGISTER -->
+<section id="risks">
+  <div class="section-header">
+    <div class="section-number">// 12</div>
+    <h2 class="section-title">Risk Register & <span class="hi">Mitigation</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <p>Every risk identified below was stress-tested through the design process. None are deal-breakers. All have mitigation paths. Investors should see this register as evidence of engineering rigor, not cause for alarm.</p>
+
+  <table class="risk-table">
+    <thead>
+      <tr><th>Risk</th><th>Severity</th><th>Probability</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Starship launch cadence insufficient for Phase 1 schedule</td>
+        <td class="risk-high">HIGH</td>
+        <td class="risk-med">MEDIUM</td>
+        <td>Multi-provider launch strategy. Falcon Heavy + Vulcan as backup. Phase 1 schedule has 24-month buffer built in.</td>
+      </tr>
+      <tr>
+        <td>Orbital debris collision (Kessler risk in LEO)</td>
+        <td class="risk-high">HIGH</td>
+        <td class="risk-med">MEDIUM</td>
+        <td>500–600 km altitude reduces debris density vs. 400 km ISS orbit. Active debris avoidance maneuver capability. Phase 2 migration to NRHRO eliminates LEO risk entirely.</td>
+      </tr>
+      <tr>
+        <td>Consortium governance breakdown — member dispute</td>
+        <td class="risk-med">MEDIUM</td>
+        <td class="risk-med">MEDIUM</td>
+        <td>Anti-exclusion covenant legally binding. SIS Technical Board has unilateral suspension authority. CERN governance model has 70-year track record of multi-nation stability.</td>
+      </tr>
+      <tr>
+        <td>Radiation dose exceedance — crew health event</td>
+        <td class="risk-high">HIGH</td>
+        <td class="risk-low">LOW</td>
+        <td>Water wall + polyethylene shielding. SPE storm shelter &lt;5 min access. Real-time dosimetry monitoring. Crew rotation shortened on medical authority without governance vote required.</td>
+      </tr>
+      <tr>
+        <td>CRV #1 reentry failure</td>
+        <td class="risk-high">HIGH</td>
+        <td class="risk-low">LOW</td>
+        <td>Unmanned first reentry strongly recommended. All critical failure modes recoverable on CRV #2. Heritage from Dragon and Soyuz abort system design. Ocean splashdown minimizes ground risk.</td>
+      </tr>
+      <tr>
+        <td>NASA CLD funding not awarded to ISITO</td>
+        <td class="risk-med">MEDIUM</td>
+        <td class="risk-med">MEDIUM</td>
+        <td>CLD partnership rather than competition with Axiom/Starlab as alternative. Private consortium funding as backup. SpaceX co-ownership provides alternate funding pathway.</td>
+      </tr>
+      <tr>
+        <td>Rotating habitat bearing joint mechanical failure</td>
+        <td class="risk-high">HIGH</td>
+        <td class="risk-low">LOW</td>
+        <td>Dual redundant bearing systems. Lockout capability returns ring to static mode. Design heritage from ISS Beta Gimbal Assembly and proposed rotating habitat studies. Regular EVA inspection protocol.</td>
+      </tr>
+      <tr>
+        <td>Securities law complications delaying equity structure</td>
+        <td class="risk-med">MEDIUM</td>
+        <td class="risk-med">MEDIUM</td>
+        <td>Phase 0 legal formation completes before any equity is offered. Securities attorney engaged from day one. Axiom and Starlab legal structures available as template references.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ISITO</div>
+  <div class="footer-sub">International Space Infrastructure Treaty Organization &nbsp;·&nbsp; The Solaris Accord</div>
+  <div class="footer-note">
+    This document represents a conceptual engineering framework developed through iterative systems analysis. All mass estimates, cost projections, and timelines are rough-order-of-magnitude figures for concept validation purposes. Full detailed design, independent cost estimation, and engineering review are required prior to any investment or construction commitment.
+  </div>
+  <div class="classification">// CONCEPT DOC v0.4 — NOT FOR DISTRIBUTION — ENGINEERING REVIEW PENDING //</div>
+</footer>
+
+</body>
+</html>
